@@ -1,5 +1,5 @@
 {
-  "name": "Safe Agentathon",
+  "name": "agentdcmanager",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,21 +8,28 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AEY-Studios/safe-agentathon"
+    "url": "git+https://github.com/benji56/agentdcmanager.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/AEY-Studios/safe-agentathonissues"
+    "url": "https://github.com/benji56/agentdcmanager/issues"
   },
-  "homepage": "https://github.com/AEY-Studios/safe-agentathon#readme",
+  "homepage": "https://github.com/benji56/agentdcmanager#readme",
   "description": "",
   "dependencies": {
+    "@solana/spl-token": "^0.4.12",
+    "@solana/web3.js": "^1.98.0",
     "axios": "^1.7.9",
     "discord.js": "^14.17.3",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.10.0",
+    "telegraf": "^4.16.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
+  },
+  "engines": {
+    "node": "22.x"
   }
 }

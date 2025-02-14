@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder,PermissionsBitField } = require('discord.js');
 const channelList = require('../utils/channelList');
 
 module.exports = {
@@ -6,12 +6,16 @@ module.exports = {
         .setName('removechannel')
         .setDescription('Removes the current channel from the watch list.'),
     async execute(interaction) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+            return interaction.reply({
+                content: 'You do not have permission.',
+                ephemeral: true 
+            });
+        }
         const channelId = interaction.channel.id;
 
-        // Ellenőrizzük, hogy a csatorna ID benne van-e a listában
         const agentId = channelList.getAgentByChannel(channelId);
         if (agentId) {
-            // Eltávolítjuk a csatornát a listából
             channelList.removeChannel(channelId);
             await interaction.reply(`Channel with ID ${channelId} and agent ID ${agentId} removed from the watch list.`);
         } else {

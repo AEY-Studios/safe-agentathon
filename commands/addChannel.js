@@ -1,8 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 const channelList = require('../utils/channelList');
 const agentConfigs = require('../utils/agentConfig'); 
-const axios = require('axios');
-
+const {triggerAgent} = require('../utils/communicateWithAgent'); 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('addchannel')
@@ -21,6 +20,12 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+            return interaction.reply({
+                content: 'You do not have permission.',
+                ephemeral: true 
+            });
+        }
         const channelId = interaction.channel.id;
         const context = interaction.options.getString('context');
         const selectedAgentId = interaction.options.getString('agent');
@@ -30,17 +35,11 @@ module.exports = {
             return interaction.reply('Invalid agent selected.');
         }
 
-        // Ellenőrizzük, hogy a csatorna már hozzá van-e adva
         if (!channelList.getAgentByChannel(channelId)) {
             channelList.addChannel(channelId, selectedAgentId);
 
-            const payload = {
-                channelId: channelId,
-                context: context,
-            };
-
             try {
-                await axios.post(selectedAgent.configURL, payload);
+                await triggerAgent(selectedAgent.agent_project_id, selectedAgent.agent_id, channelId, selectedAgent.discordInitText + context)
                 await interaction.reply(`Channel with ID ${channelId} added to the watch list, and context sent to ${selectedAgent.name}.`);
             } catch (error) {
                 console.error('Error sending data to agent API:', error);

@@ -1,6 +1,6 @@
 const channelList = require('../utils/channelList');
 const agentConfigs = require('../utils/agentConfig'); 
-const axios = require('axios');
+const {triggerAgent} = require('../utils/communicateWithAgent'); 
 
 module.exports = {
     name: 'messageCreate',
@@ -21,9 +21,12 @@ module.exports = {
             messageId: message.id,
             content: message.content,
         };
-
+        const msg = `${payload.userName} said on discord: ${payload.content}.
+            message_id_input:${payload.messageId}
+            channel_id_input:${payload.channelId}
+            reply to it using the discord message tool!`;
         try {
-            await axios.post(selectedAgent.msgURL, payload);
+            await triggerAgent(selectedAgent.agent_project_id, selectedAgent.agent_id, message.channel.id, msg)
             console.log('Üzenet sikeresen elküldve az API-nak.');
         } catch (error) {
             console.error('Hiba történt az API-hoz való küldés közben:', error);

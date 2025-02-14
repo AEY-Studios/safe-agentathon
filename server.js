@@ -1,11 +1,10 @@
-// server.js
 require('dotenv').config();
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { loadCommands } = require('./utils/loadCommands');
 const fs = require('fs');
 const path = require('path');
-const registerCommands = require('./utils/registerCommands'); // Ha van ilyen
-
+const registerCommands = require('./utils/registerCommands'); 
+const {startTelegramBots } = require('./telegram/telegramManager'); 
 // Bot inicializálása
 const client = new Client({
     intents: [
@@ -36,7 +35,6 @@ for (const file of eventFiles) {
     }
 }
 
-// Parancsok regisztrálása (ha van egy külön funkciód rá)
 client.once('ready', async () => {
     console.log('Bot ready!');
 
@@ -45,7 +43,6 @@ client.once('ready', async () => {
     }
 });
 
-// Bot elindítása
 client.login(process.env.DISCORD_TOKEN);
-
+startTelegramBots();
 module.exports = client;

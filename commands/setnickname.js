@@ -1,5 +1,4 @@
-// setnickname.js (or setnicname.js—just be consistent!)
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder,PermissionsBitField} = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,6 +11,12 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+                    return interaction.reply({
+                        content: 'You do not have permission.',
+                        ephemeral: true 
+                    });
+                }
         const newNickname = interaction.options.getString('nickname');
 
         try {
